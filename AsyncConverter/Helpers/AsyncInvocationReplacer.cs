@@ -16,10 +16,12 @@ namespace AsyncConverter.Helpers
 
             var returnType = invocation.Type();
 
+            var accessSign = referenceExpression.HasConditionalAccessSign ? "?" : "";
+
             var factory = CSharpElementFactory.GetInstance(invocation);
             var newReferenceExpression = referenceExpression.QualifierExpression == null
                 ? factory.CreateReferenceExpression("$0", newMethodName)
-                : factory.CreateReferenceExpression("$0.$1", referenceExpression.QualifierExpression, newMethodName);
+                : factory.CreateReferenceExpression($"$0{accessSign}.$1", referenceExpression.QualifierExpression, newMethodName);
 
             newReferenceExpression.SetTypeArgumentList(referenceExpression.TypeArgumentList);
 
@@ -27,13 +29,13 @@ namespace AsyncConverter.Helpers
             if (useAwait)
             {
                 callFormat = "await $0($1)";
-                var awaitExpression = factory.CreateExpression(callFormat, newReferenceExpression, invocation.ArgumentList);
+                var awaitExpression = factory.CreateExpression(callFormat, newReferenceExpression.GetText(), invocation.ArgumentList);
                 invocation.ReplaceBy(awaitExpression);
             }
             else
             {
                 callFormat = returnType.IsVoid() ? "$0($1).Wait()" : "$0($1).Result";
-                var awaitExpression = factory.CreateExpression(callFormat, newReferenceExpression, invocation.ArgumentList);
+                var awaitExpression = factory.CreateExpression(callFormat, newReferenceExpression.GetText(), invocation.ArgumentList);
                 invocation.ReplaceBy(awaitExpression);
             }
         }
