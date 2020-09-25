@@ -16,6 +16,7 @@ namespace AsyncConverter.ContextActions
     public class MethodToAsyncConverter : ContextActionBase
     {
         private IAsyncReplacer asyncReplacer;
+
         private ICSharpContextActionDataProvider Provider { get; }
 
         public MethodToAsyncConverter(ICSharpContextActionDataProvider provider)
@@ -38,6 +39,7 @@ namespace AsyncConverter.ContextActions
         }
 
         public override string Text { get; } = "Convert method to async and replace all inner call to async version if exist.";
+
         public override bool IsAvailable(IUserDataHolder cache)
         {
             var method = GetMethodFromCarretPosition();

@@ -20,12 +20,13 @@ namespace AsyncConverter.Helpers
             var newReferenceExpression = referenceExpression.QualifierExpression == null
                 ? factory.CreateReferenceExpression("$0", newMethodName)
                 : factory.CreateReferenceExpression("$0.$1", referenceExpression.QualifierExpression, newMethodName);
+
             newReferenceExpression.SetTypeArgumentList(referenceExpression.TypeArgumentList);
 
             string callFormat;
             if (useAwait)
             {
-                callFormat = "await $0($1).ConfigureAwait(false)";
+                callFormat = "await $0($1)";
                 var awaitExpression = factory.CreateExpression(callFormat, newReferenceExpression, invocation.ArgumentList);
                 invocation.ReplaceBy(awaitExpression);
             }

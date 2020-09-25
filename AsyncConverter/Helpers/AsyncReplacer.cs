@@ -20,9 +20,13 @@ namespace AsyncConverter.Helpers
         private readonly ISyncWaitChecker syncWaitChecker;
         private readonly ISyncWaitConverter syncWaitConverter;
 
-        public AsyncReplacer(IAsyncInvocationReplacer asyncInvocationReplacer, IInvocationConverter invocationConverter,
-                             IAwaitElider awaitElider, IAwaitEliderChecker awaitEliderChecker,
-                             ISyncWaitChecker syncWaitChecker, ISyncWaitConverter syncWaitConverter)
+        public AsyncReplacer(
+            IAsyncInvocationReplacer asyncInvocationReplacer,
+            IInvocationConverter invocationConverter,
+            IAwaitElider awaitElider,
+            IAwaitEliderChecker awaitEliderChecker,
+            ISyncWaitChecker syncWaitChecker,
+            ISyncWaitConverter syncWaitConverter)
         {
             this.asyncInvocationReplacer = asyncInvocationReplacer;
             this.invocationConverter = invocationConverter;
@@ -34,9 +38,7 @@ namespace AsyncConverter.Helpers
 
         public void ReplaceToAsync(IMethod method)
         {
-            foreach (var methodDeclaration in method
-                .FindAllHierarchy()
-                .SelectMany(x => x.GetDeclarations<IMethodDeclaration>()))
+            foreach (var methodDeclaration in method.FindAllHierarchy().SelectMany(x => x.GetDeclarations<IMethodDeclaration>()))
             {
                 ReplaceMethodToAsync(methodDeclaration);
             }
@@ -62,12 +64,14 @@ namespace AsyncConverter.Helpers
             //TODO: ugly hack. think
             IInvocationExpression invocationExpression;
             while ((invocationExpression
-                       = method.DescendantsInScope<IInvocationExpression>().FirstOrDefault(syncWaitChecker.CanReplaceWaitToAsync)) != null)
+                    = method.DescendantsInScope<IInvocationExpression>().FirstOrDefault(syncWaitChecker.CanReplaceWaitToAsync))
+                != null)
                 syncWaitConverter.ReplaceWaitToAsync(invocationExpression);
 
             IReferenceExpression referenceExpression;
             while ((referenceExpression
-                       = method.DescendantsInScope<IReferenceExpression>().FirstOrDefault(syncWaitChecker.CanReplaceResultToAsync)) != null)
+                    = method.DescendantsInScope<IReferenceExpression>().FirstOrDefault(syncWaitChecker.CanReplaceResultToAsync))
+                != null)
                 syncWaitConverter.ReplaceResultToAsync(referenceExpression);
 
             var replace = true;
@@ -84,10 +88,7 @@ namespace AsyncConverter.Helpers
                 }
             }
 
-            foreach (var parametersOwnerDeclaration in method
-                .Descendants<IParametersOwnerDeclaration>()
-                .ToEnumerable()
-                .Where(awaitEliderChecker.CanElide))
+            foreach (var parametersOwnerDeclaration in method.Descendants<IParametersOwnerDeclaration>().ToEnumerable().Where(awaitEliderChecker.CanElide))
             {
                 awaitElider.Elide(parametersOwnerDeclaration);
             }
@@ -112,6 +113,7 @@ namespace AsyncConverter.Helpers
                 var task = TypeFactory.CreateTypeByCLRName("System.Threading.Tasks.Task`1", psiModule).GetTypeElement();
                 if (task == null)
                     return;
+
                 newReturnValue = TypeFactory.CreateType(task, returnType);
             }
 
@@ -119,15 +121,16 @@ namespace AsyncConverter.Helpers
 
             SetSignature(methodDeclaration, newReturnValue, name);
 
-            if(awaitEliderChecker.CanElide(methodDeclaration))
+            if (awaitEliderChecker.CanElide(methodDeclaration))
                 awaitElider.Elide(methodDeclaration);
         }
 
         private static void SetSignature([NotNull] IMethodDeclaration methodDeclaration, [NotNull] IType newReturnValue, [NotNull] string newName)
         {
             methodDeclaration.SetType(newReturnValue);
-            if(!methodDeclaration.IsAbstract)
+            if (!methodDeclaration.IsAbstract)
                 methodDeclaration.SetAsync(true);
+
             methodDeclaration.SetName(newName);
         }
     }

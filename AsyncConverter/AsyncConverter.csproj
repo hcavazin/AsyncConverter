@@ -1,34 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
-    <IsPackable>true</IsPackable>
-    <PackageId>AsyncConverter.AsyncConverter</PackageId>
-    <Version>1.1.8.28</Version>
-    <Authors>i.mamay</Authors>
-    <Company />
-    <Product />
-    <Title>AsyncConverter</Title>
-    <Copyright>i.mamay</Copyright>
-    <Description>Plugin for resharper, for converting code to async.</Description>
-    <PackageTags>async</PackageTags>
-    <PackageProjectUrl>https://github.com/BigBabay/AsyncConverter</PackageProjectUrl>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\Resharper\Debug</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NETFRAMEWORK;NET461;RESHARPER</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\Resharper\Release</OutputPath>
-    <DefineConstants>TRACE;RELEASE;NETFRAMEWORK;NET461;RESHARPER</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Remove="AsyncConverter.Rider.nuspec" />
-    <None Remove="packages.AsyncConverter.config" />
-    <None Remove="packages.AsyncConverter.Rider.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2020.2.0" PrivateAssets="All" />
-    <PackageReference Include="Wave" Version="[202]" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net461</TargetFramework>
+		<IsPackable>true</IsPackable>
+		<PackageId>AsyncConverter.AsyncConverter</PackageId>
+		<Version>1.1.8.31</Version>
+		<Authors>i.mamay</Authors>
+		<Company />
+		<Product />
+		<Title>AsyncConverter</Title>
+		<Copyright>i.mamay</Copyright>
+		<Description>Plugin for resharper, for converting code to async.</Description>
+		<PackageTags>async</PackageTags>
+		<PackageProjectUrl>https://github.com/BigBabay/AsyncConverter</PackageProjectUrl>
+		<PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<OutputPath>bin\Resharper\Debug</OutputPath>
+		<DefineConstants>TRACE;DEBUG;NETFRAMEWORK;NET461;RESHARPER</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<OutputPath>bin\Resharper\Release</OutputPath>
+		<DefineConstants>TRACE;RELEASE;NETFRAMEWORK;NET461;RESHARPER</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Remove="AsyncConverter.Rider.nuspec" />
+		<None Remove="packages.AsyncConverter.config" />
+		<None Remove="packages.AsyncConverter.Rider.config" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2020.2.3" PrivateAssets="All" />
+		<PackageReference Include="Wave" Version="202" />
+	</ItemGroup>
+	<PropertyGroup>
+		<HostFullIdentifier>ReSharperPlatformVs16_25d6acf1pluginDebug</HostFullIdentifier>
+	</PropertyGroup>
 </Project>

@@ -26,7 +26,7 @@ namespace AsyncConverter.Helpers
         private static void ReplaceToAwait([NotNull] ICSharpExpression invocationExpression, [NotNull] ITreeNode replaceBy)
         {
             var factory = CSharpElementFactory.GetInstance(invocationExpression);
-            var call = factory.CreateExpression("await $0.ConfigureAwait(false)", replaceBy);
+            var call = factory.CreateExpression("await $0", replaceBy);
             invocationExpression.ReplaceBy(call);
         }
     }
