@@ -29,12 +29,20 @@ namespace AsyncConverter.ContextActions
             asyncReplacer = solution.GetComponent<IAsyncReplacer>();
 
             var method = GetMethodFromCarretPosition();
+            var localFunction = GetLocalFunctionFromCarretPosition();
 
             var methodDeclaredElement = method?.DeclaredElement;
-            if (methodDeclaredElement == null)
-                return null;
+            var localFunctionDeclaredElement = localFunction?.DeclaredElement;
 
-            asyncReplacer.ReplaceToAsync(methodDeclaredElement);
+            if (methodDeclaredElement != null)
+            {
+                asyncReplacer.ReplaceToAsync(methodDeclaredElement);
+            }
+            else if (localFunctionDeclaredElement != null)
+            {
+                asyncReplacer.ReplaceToAsync(localFunctionDeclaredElement);
+            }
+
             return null;
         }
 
@@ -43,10 +51,10 @@ namespace AsyncConverter.ContextActions
         public override bool IsAvailable(IUserDataHolder cache)
         {
             var method = GetMethodFromCarretPosition();
-            if (method == null)
-                return false;
+            var localFunction = GetLocalFunctionFromCarretPosition();
 
-            var returnType = method.DeclaredElement?.ReturnType;
+            var returnType = method?.DeclaredElement?.ReturnType
+                ?? localFunction?.DeclaredElement.ReturnType;
 
             return returnType != null && !(returnType.IsTask() || returnType.IsGenericTask());
         }
@@ -57,6 +65,14 @@ namespace AsyncConverter.ContextActions
             var identifier = Provider.TokenAfterCaret as ICSharpIdentifier;
             identifier = identifier ?? Provider.TokenBeforeCaret as ICSharpIdentifier;
             return identifier?.Parent as IMethodDeclaration;
+        }
+
+        [CanBeNull]
+        private ILocalFunctionDeclaration GetLocalFunctionFromCarretPosition()
+        {
+            var identifier = Provider.TokenAfterCaret as ICSharpIdentifier;
+            identifier = identifier ?? Provider.TokenBeforeCaret as ICSharpIdentifier;
+            return identifier?.Parent as ILocalFunctionDeclaration;
         }
     }
 }
